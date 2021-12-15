@@ -68,7 +68,19 @@ module.exports = ({ env: webpackEnv }) => {
       }
     },
     // 下面是antd 的按需加载用的，不用每次导入css文件
-    babel: {},
+    babel: {
+      presets: [
+        [
+          '@babel/preset-env',
+          {
+            targets: {
+              chrome: '49',
+              ios: '10'
+            }
+          }
+        ]
+      ]
+    },
     plugins: [],
     style: {
       postcss: {
