@@ -21,7 +21,9 @@
     "jsx": "react-jsx"
   },
   "include": [
-    "src"
+    "src",
+    "post",
+    "post"
   ],
   "extends": "./tsconfig.extend.json"
 }

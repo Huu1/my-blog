@@ -1,13 +1,26 @@
-import React from 'react';
-import Headroom from 'react-headroom';
+import React, { useContext } from 'react';
+import Switch from 'antd-mobile/es/components/switch';
+import { ThemeContext } from '@/context/theme';
 
 function Header() {
+  const [isDark, changeDark] = useContext(ThemeContext);
+
+  const onChange = (value: boolean) => {
+    changeDark(value);
+  };
+
   return (
-    <Headroom>
-      <div className='bg-yellow-400'>
-        <h1>sadfdsf</h1>
-      </div>
-    </Headroom>
+    <div className='mb-10 flex justify-between'>
+      <h1 className='text-3xl font-serif font-black dark:text-white'>
+        Hy的博客~
+      </h1>
+      <Switch
+        uncheckedText='关'
+        checkedText='开'
+        defaultChecked={isDark}
+        onChange={onChange}
+      />
+    </div>
   );
 }
 

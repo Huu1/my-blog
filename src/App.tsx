@@ -1,65 +1,35 @@
-import React, { useState } from 'react';
+import React from 'react';
+import { BrowserRouter as Router, Route } from 'react-router-dom';
+import routers from '@/config/router';
 import './App.css';
-import { Badge, FloatingBubble, TabBar } from 'antd-mobile';
-import {
-  AppOutline,
-  MessageOutline,
-  MessageFill,
-  UnorderedListOutline,
-  UserOutline
-} from 'antd-mobile-icons';
+import 'tailwindcss/tailwind.css';
 import Header from './components/Header';
-
-const tabs = [
-  {
-    key: 'home',
-    title: '首页',
-    icon: <AppOutline />,
-    badge: Badge.dot
-  },
-  {
-    key: 'todo',
-    title: '我的待办',
-    icon: <UnorderedListOutline />,
-    badge: '5'
-  },
-  {
-    key: 'message',
-    title: '我的消息',
-    icon: (active: boolean) => (active ? <MessageFill /> : <MessageOutline />),
-    badge: '99+'
-  },
-  {
-    key: 'personalCenter',
-    title: '个人中心',
-    icon: <UserOutline />
-  }
-];
+import DarkContext from './context/theme';
+// Create a client
 
 function App() {
-  const [activeKey, setActiveKey] = useState('todo');
   return (
-    <div className='App' style={{ height: '120vh' }}>
-      <Header />
-      <FloatingBubble
-        style={{
-          '--initial-position-bottom': '68px',
-          '--initial-position-right': '24px'
-        }}
-      >
-        <MessageFill fontSize={32} />
-      </FloatingBubble>
-      <TabBar
-        activeKey={activeKey}
-        onChange={setActiveKey}
-        className='fixed bottom-0 inset-x-0'
-      >
-        {tabs.map((item) => (
-          <TabBar.Item key={item.key} icon={item.icon} title={item.title} />
-        ))}
-      </TabBar>
-    </div>
+    <DarkContext>
+      <div className='App px-5 pt-10' style={{ minHeight: '100vh' }}>
+        <Header />
+        <Routers />
+      </div>
+    </DarkContext>
   );
 }
+
+const Routers = () => (
+  <Router>
+    {/* <Redirect exact from='/' to='/home' /> */}
+    {routers.map((route, index) => (
+      <Route
+        key={index}
+        path={route.path}
+        // exact={route.exact}
+        component={route.component}
+      />
+    ))}
+  </Router>
+);
 
 export default App;

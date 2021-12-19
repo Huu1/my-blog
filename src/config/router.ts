@@ -1,10 +1,14 @@
-// import Loadable from 'react-loadable';
-// import Loading from 'Src/components/Loading';
+import Loadable from 'react-loadable';
+import Loading from '@/components/RouteLoading';
 
-// const Home = Loadable({
-//   loader: () => import(/* webpackChunkName:'Dashboard' */ 'Src/views/Home'),
-//   loading: Loading,
-// });
+const Home = Loadable({
+  loader: () => import(/* webpackChunkName:'Dashboard' */ '@/page/home'),
+  loading: Loading
+});
+const Post = Loadable({
+  loader: () => import(/* webpackChunkName:'Dashboard' */ '@/page/post'),
+  loading: Loading
+});
 // const Author = Loadable({
 //   loader: () => import(/* webpackChunkName:'Dashboard' */ 'Src/views/Author'),
 //   loading: Loading,
@@ -24,10 +28,10 @@
 
 // eslint-disable-next-line import/no-anonymous-default-export
 export default [
-  // { path: '/home', component: Home },
-  // // { path: '/article/:id', component: Article },
-  // // { path: '/author', component: Author },
+  { path: '/home', component: Home },
+  { path: '/post/:id', component: Post }
+  // { path: '/author', component: Author },
   // { path: '/test', component: Test },
-  // // { path: '/login', component: Login },
+  // { path: '/login', component: Login },
   // { path: '/error/404', component: Error },
 ];
