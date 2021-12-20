@@ -1,11 +1,10 @@
 import React from 'react';
-import { BrowserRouter as Router, Route } from 'react-router-dom';
+import { Redirect, Route, Switch } from 'react-router-dom';
 import routers from '@/config/router';
 import './App.css';
 import 'tailwindcss/tailwind.css';
 import Header from './components/Header';
 import DarkContext from './context/theme';
-// Create a client
 
 function App() {
   return (
@@ -19,17 +18,17 @@ function App() {
 }
 
 const Routers = () => (
-  <Router>
-    {/* <Redirect exact from='/' to='/home' /> */}
+  <Switch>
     {routers.map((route, index) => (
       <Route
         key={index}
         path={route.path}
-        // exact={route.exact}
+        exact={route.exact}
         component={route.component}
       />
     ))}
-  </Router>
+    <Redirect to='/error/404' />
+  </Switch>
 );
 
 export default App;

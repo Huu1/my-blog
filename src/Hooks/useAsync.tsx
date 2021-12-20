@@ -1,5 +1,5 @@
-import request from '@/utils/http';
 import { useEffect, useReducer, useState } from 'react';
+import { Get, Post } from '@/api/request';
 
 const dataFetchReducer = (state: any, action: any) => {
   switch (action.type) {
@@ -36,7 +36,7 @@ export const useAsync = (
   const [url, setUrl] = useState(initUrl);
 
   const [state, dispatch] = useReducer(dataFetchReducer, {
-    isLoading: false,
+    isLoading: true,
     isError: false,
     data: []
   });
@@ -50,15 +50,16 @@ export const useAsync = (
       try {
         let result: any;
         if (methods === 'GET') {
-          result = await request.get(url);
+          result = await Get(url, param);
         } else if (methods === 'POST') {
-          result = await request.post(url, param);
+          result = await Post(url, param);
         }
+
         if (result?.code !== 0) {
           dispatch({ type: 'FETCH_FAILURE' });
         }
         if (!didCancel) {
-          dispatch({ type: 'FETCH_SUCCESS', payload: result.data });
+          dispatch({ type: 'FETCH_SUCCESS', payload: result });
         }
       } catch {
         if (!didCancel) {

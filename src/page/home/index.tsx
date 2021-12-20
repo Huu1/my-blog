@@ -1,12 +1,10 @@
-import React, { useCallback } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import UserInfo from '@/components/UserInfo';
-import { useAsync } from '@/Hooks/useAsync';
 import ErrorBlock from 'antd-mobile/es/components/error-block';
-import { Loading } from 'antd-mobile/es/components/loading/loading';
 import { IArticle } from '@/types';
-// import { Button } from 'antd-mobile';
 import { withRouter } from 'react-router';
-// import Header from '@/components/Header';
+import InfiniteScroll from 'antd-mobile/es/components/infinite-scroll';
+import { Get } from '@/api/request';
 
 export const ArticleHeader = React.memo(
   (props: {
@@ -64,16 +62,37 @@ const Article = React.memo(
   }
 );
 
+const initParam = {
+  pageSize: 5,
+  current: 1
+};
+
 const Home = (props: any) => {
-  const { state } = useAsync(
-    '/api/article/queryAllPublish',
-    {
-      pageSize: 5,
-      current: 1
-    },
-    'GET'
-  );
-  const { data, isLoading, isError } = state;
+  const param = useRef({ ...initParam });
+
+  const [data, setData] = useState<IArticle[]>([]);
+  const [hasMore, setHasMore] = useState(true);
+  const [isError, setError] = useState(false);
+
+  useEffect(() => {
+    return () => {
+      param.current = initParam;
+    };
+  }, []);
+
+  const loadMore = useCallback(async () => {
+    try {
+      const data = (await Get('/api/article/queryAllPublish', {
+        ...param.current,
+        current: param.current.current++
+      })) as { list: IArticle[] };
+      const { list } = data;
+      setData((val) => [...val, ...list]);
+      setHasMore(list.length > 0);
+    } catch (error) {
+      setError(true);
+    }
+  }, []);
 
   const onClickArticle = (articleId: string) => {
     props.history.push('/post/' + articleId);
@@ -83,18 +102,10 @@ const Home = (props: any) => {
     return <ErrorBlock fullPage />;
   }
 
-  if (isLoading) {
-    return (
-      <span style={{ fontSize: 14 }}>
-        <Loading />
-      </span>
-    );
-  }
-
   return (
     <div>
       <UserInfo />
-      {data?.list?.map((article: IArticle, index: number) => {
+      {data.map((article: IArticle) => {
         return (
           <Article
             key={article.articleId}
@@ -103,9 +114,7 @@ const Home = (props: any) => {
           />
         );
       })}
-      {/* <Button loading color='primary' loadingText='加载中'>
-        Loading
-      </Button> */}
+      <InfiniteScroll loadMore={loadMore} hasMore={hasMore} threshold={10} />
     </div>
   );
 };
