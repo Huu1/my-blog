@@ -14,15 +14,20 @@ function Header(props: any) {
     <div className='mb-10 flex justify-between'>
       <h1
         onClick={() => props.history.push('/')}
-        className='text-3xl font-serif font-black dark:text-white'
+        className='text-3xl font-black dark:text-white'
       >
-        Hy的博客~
+        踏遍青山人未老，
       </h1>
       <Switch
-        uncheckedText='关'
-        checkedText='开'
+        uncheckedText='亮'
+        checkedText='暗'
         defaultChecked={isDark}
         onChange={onChange}
+        style={{
+          '--checked-color': '#0f1114',
+          '--height': '30px',
+          '--width': '60px'
+        }}
       />
     </div>
   );

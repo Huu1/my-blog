@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { withRouter } from 'react-router';
 import Editor from 'md-editor-rt';
 import 'md-editor-rt/lib/style.css';
@@ -8,9 +8,52 @@ import { ArticleHeader } from '../home';
 import { IArticle } from '@/types';
 import Loader from 'react-spinners/BeatLoader';
 import { Get } from '@/api/request';
+import { NavLink } from 'react-router-dom';
+import { Space } from 'antd-mobile';
+import UserInfo from '@/components/UserInfo';
 
 // const markdown = `### Overview
 // ## Table of contents`;
+
+enum LINK_TYPE {
+  TAG = 'tagId',
+  LABEL = 'labelId'
+}
+
+const TagLink = ({
+  name,
+  value,
+  type
+}: {
+  name: string;
+  value: string;
+  type: LINK_TYPE;
+}) => {
+  const url = `/home?${type}=${value}`;
+  return (
+    <NavLink
+      className='text-base	font-medium text-pink-800 dark:text-pink-300 underline'
+      to={url}
+    >
+      {type !== LINK_TYPE.TAG ? '#' : ''}
+      {name}
+    </NavLink>
+  );
+};
+
+const TagList = ({ data, type }: { data: any[]; type: LINK_TYPE }) => {
+  return (
+    <Space>
+      {data
+        .filter((i: any) => i.status === 'on')
+        .map(({ labelId, title }) => {
+          return (
+            <TagLink key={labelId} value={labelId} name={title} type={type} />
+          );
+        })}
+    </Space>
+  );
+};
 
 const Post = (props: any) => {
   const {
@@ -45,22 +88,47 @@ const Post = (props: any) => {
   }
 
   return (
-    <div style={{ overflow: 'hidden' }}>
+    <>
       <ArticleHeader
         style={{ fontSize: '2rem' }}
         articleId='1'
         title={post?.title}
         readTime={post?.readTime}
         time={post?.publishTime}
-      />
-      <Editor
-        modelValue={post?.content?.content}
-        previewOnly
-        theme={isDark ? 'dark' : 'light'}
-        previewTheme={'github'}
-        style={{ background: isDark ? '#1F2937' : '' }}
-      />
-    </div>
+      >
+        {post?.tag ? (
+          <span className='text-sm	mt-1.5'>
+            <span>&nbsp;• &nbsp;</span>
+            <TagLink
+              value={post?.tag.tagId}
+              name={post?.tag.title}
+              type={LINK_TYPE.TAG}
+            />
+          </span>
+        ) : (
+          <></>
+        )}
+      </ArticleHeader>
+
+      <div className='mt-4'>
+        <Editor
+          modelValue={post?.content?.content}
+          previewOnly
+          theme={isDark ? 'dark' : 'light'}
+          previewTheme={'github'}
+          style={{ background: isDark ? '#1F2937' : '' }}
+        />
+        {post?.label && post?.label.length > 0 && (
+          <div className='text-base mt-7 dark:text-gray-400'>
+            标签：
+            <TagList data={post?.label || []} type={LINK_TYPE.LABEL} />
+          </div>
+        )}
+      </div>
+      <div className='my-20 mt-12'>
+        <UserInfo />
+      </div>
+    </>
   );
 };
 

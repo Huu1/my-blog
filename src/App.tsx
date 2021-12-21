@@ -19,6 +19,7 @@ function App() {
 
 const Routers = () => (
   <Switch>
+    <Redirect to='/home' from='/' exact />
     {routers.map((route, index) => (
       <Route
         key={index}

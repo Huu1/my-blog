@@ -5,6 +5,10 @@ import { IArticle } from '@/types';
 import { withRouter } from 'react-router';
 import InfiniteScroll from 'antd-mobile/es/components/infinite-scroll';
 import { Get } from '@/api/request';
+import dayjs from 'dayjs';
+import relativeTime from 'dayjs/plugin/relativeTime';
+dayjs.locale('zh-cn');
+dayjs.extend(relativeTime);
 
 export const ArticleHeader = React.memo(
   (props: {
@@ -13,13 +17,14 @@ export const ArticleHeader = React.memo(
     time?: number | string;
     readTime?: number;
     style?: any;
+    children?: React.ReactNode;
     onClickHandle?: (id: string) => void;
   }) => {
     const { title, time, readTime = 1, onClickHandle, articleId } = props;
 
     const coffeeNum = useCallback((number: number = 0) => {
       if (!number || number <= 5) return <>☕️</>;
-      if (number <= 10) return <>☕️☕️</>;
+      if (number <= 25) return <>☕️☕️</>;
       return <>☕️☕️☕️</>;
     }, []);
     return (
@@ -34,8 +39,10 @@ export const ArticleHeader = React.memo(
           {title}
         </h3>
         <small className='text-sm font-mono dark:text-gray-300'>
-          {time} • {coffeeNum(readTime)} {readTime} 分钟
+          {dayjs(time).format('MMM D, YYYY')} • {coffeeNum(readTime)} {readTime}{' '}
+          min read
         </small>
+        {props.children}
       </header>
     );
   }
@@ -46,7 +53,7 @@ const Article = React.memo(
     const { article } = props;
     const headerProps = {
       title: article.title,
-      time: article.title,
+      time: article.publishTime,
       readTime: article.readTime,
       articleId: article.articleId,
       onClickHandle: props.onClickArticle
@@ -81,9 +88,12 @@ const Home = (props: any) => {
   }, []);
 
   const loadMore = useCallback(async () => {
+    const urlSearchParams = new URLSearchParams(props.location.search);
+    const urlParams = Object.fromEntries(urlSearchParams.entries());
     try {
       const data = (await Get('/api/article/queryAllPublish', {
         ...param.current,
+        ...urlParams,
         current: param.current.current++
       })) as { list: IArticle[] };
       const { list } = data;
@@ -92,7 +102,7 @@ const Home = (props: any) => {
     } catch (error) {
       setError(true);
     }
-  }, []);
+  }, [props]);
 
   const onClickArticle = (articleId: string) => {
     props.history.push('/post/' + articleId);

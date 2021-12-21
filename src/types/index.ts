@@ -8,7 +8,13 @@ export interface IArticleUser {
   username: string;
 }
 
+interface IATag {
+  tagId: string;
+  title: string;
+}
+
 export interface IArticle {
+  tag: IATag;
   user: IArticleUser;
   content: IArticleContent;
   articleId: string;
