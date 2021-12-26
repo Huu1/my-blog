@@ -52,10 +52,7 @@ module.exports = ({ env: webpackEnv }) => {
       // configure这里可以拿到create-react-app的所有webpack配置，某些在外面修改不了的配置，可以在这配置
       configure: (webpackConfig, { env: webpackEnv, paths }) => {
         // console.log(env, paths)
-        paths.appBuild = path.join(
-          path.dirname(paths.appBuild),
-          `build-${env}`
-        );
+        paths.appBuild = path.join(path.dirname(paths.appBuild), 'build');
         webpackConfig.output = {
           ...webpackConfig.output,
           ...{
@@ -79,7 +76,8 @@ module.exports = ({ env: webpackEnv }) => {
             }
           }
         ]
-      ]
+      ],
+      plugins: []
     },
     plugins: [],
     style: {

@@ -14,7 +14,7 @@ function Header(props: any) {
     <div className='mb-10 flex justify-between'>
       <h1
         onClick={() => props.history.push('/')}
-        className='text-3xl font-black dark:text-white'
+        className='text-3xl font-black dark:text-white cursor-pointer'
       >
         踏遍青山人未老，
       </h1>

@@ -1,21 +1,23 @@
-import React from 'react';
+import React, { useLayoutEffect } from 'react';
 import ReactDOM from 'react-dom';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
-// import { QueryClient, QueryClientProvider } from 'react-query';
+import { BrowserRouter as Router, useLocation } from 'react-router-dom';
 import './index.css';
-import { BrowserRouter as Router } from 'react-router-dom';
 
-// const queryClient = new QueryClient();
-// import 'bytemd/dist/index.min.css';
+function ScrollToTop() {
+  const { pathname } = useLocation();
+  useLayoutEffect(() => {
+    window.scrollTo(0, 0);
+  }, [pathname]);
+  return null;
+}
+
 ReactDOM.render(
-  // <React.StrictMode>
-  // <QueryClientProvider client={queryClient}>
   <Router>
+    <ScrollToTop />
     <App />
   </Router>,
-  // </QueryClientProvider>,
-  // </React.StrictMode>
   document.getElementById('root')
 );
 

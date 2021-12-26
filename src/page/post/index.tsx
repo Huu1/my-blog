@@ -64,19 +64,26 @@ const Post = (props: any) => {
   const [loading, setLoading] = React.useState(true);
 
   useEffect(() => {
+    let didCancel = false;
+    setLoading(true);
     const fetchPost = async () => {
       try {
         const data: IArticle = (await Get(
           `/api/article/${params.id}`,
           {}
         )) as IArticle;
-        setPost(data);
-        setLoading(false);
+        if (!didCancel) {
+          setPost(data);
+          setLoading(false);
+        }
       } catch (error) {
         console.error(error);
       }
     };
     fetchPost();
+    return () => {
+      didCancel = true;
+    };
   }, [params.id]);
 
   if (loading) {
@@ -125,8 +132,28 @@ const Post = (props: any) => {
           </div>
         )}
       </div>
-      <div className='my-20 mt-12'>
+      <div className='my-18 mt-12'>
         <UserInfo />
+      </div>
+      <div className='my-8 mt-7 text-red-400 text-lg underline p-3 flex-wrap flex justify-between	'>
+        <div className='mb-3'>
+          {post?.previous && (
+            <NavLink
+              className='text-pink-800 dark:text-pink-300 '
+              to={`/post/${post?.previous.articleId}`}
+            >
+              👈{post?.previous.title}
+            </NavLink>
+          )}
+        </div>
+        {post?.next && (
+          <NavLink
+            className=' text-pink-800 dark:text-pink-300 '
+            to={`/post/${post?.next.articleId}`}
+          >
+            {post?.next.title}👉👉
+          </NavLink>
+        )}
       </div>
     </>
   );

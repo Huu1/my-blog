@@ -31,4 +31,6 @@ export interface IArticle {
   viewNum: number;
   readTime: number;
   label: any[];
+  next?: IArticle;
+  previous?: IArticle;
 }

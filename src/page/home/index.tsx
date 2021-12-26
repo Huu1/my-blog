@@ -33,7 +33,7 @@ export const ArticleHeader = React.memo(
           onClick={() => {
             onClickHandle && onClickHandle(articleId);
           }}
-          className='text-3xl mb-2	mt-12 font-black text-pink-800 dark:text-pink-300'
+          className='text-3xl mb-2	mt-12 font-black text-pink-800 dark:text-pink-300 cursor-pointer'
           style={{ ...props.style }}
         >
           {title}
@@ -105,7 +105,8 @@ const Home = (props: any) => {
   }, [props]);
 
   const onClickArticle = (articleId: string) => {
-    props.history.push('/post/' + articleId);
+    const w: Window = window.open('about:blank') as Window;
+    w.location.href = `/post/${articleId}`;
   };
 
   if (isError) {

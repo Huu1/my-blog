@@ -9,7 +9,10 @@ import DarkContext from './context/theme';
 function App() {
   return (
     <DarkContext>
-      <div className='App px-5 pt-10' style={{ minHeight: '100vh' }}>
+      <div
+        className='App px-5 pt-10'
+        style={{ minHeight: '100vh', margin: '0 auto', maxWidth: '1280px' }}
+      >
         <Header />
         <Routers />
       </div>
